@@ -168,13 +168,18 @@ int main(int argc, char *argv[]) {
 
 
 注意使用如下命令：
+~~~
 gcc test.c $(pkg-config --cflags --libs libCacheSim glib-2.0) -o test.out
+~~~
 
 若出现undefined reference错误，解决这个问题的方法是在编译时明确地链接 libdl 库，则使用如下命令：
+~~~
 gcc test.c $(pkg-config --cflags --libs libCacheSim glib-2.0) -ldl -o test.out
-
-然后运行 ./test.out
-
+~~~
+然后运行 
+~~~
+./test.out
+~~~
 
 
 
@@ -184,27 +189,41 @@ gcc test.c $(pkg-config --cflags --libs libCacheSim glib-2.0) -ldl -o test.out
 进入prototype目录
 
 直接使用以下命令会报错
+~~~
 cargo build --release
+~~~
 需要换源：
 使用 vim 新建（或编辑已有）一个config文件：
+~~~
 sudo vim ~/.cargo/config
+~~~
 
 这时 vim 建立一个新的为保存config文件，英文输入模式下，输入 i 进入编辑模式，添加以下内容（和在Windows 时编辑的配置文件一样）：
 [source.crates-io]
+~~~
 replace-with='rsproxy'
+~~~
 [source.rsproxy]
+~~~
 registry="https://rsproxy.cn/crates.io-index"
+~~~
 [registries.rsproxy]
+~~~
 index = "https://rsproxy.cn/crates.io-index"
+~~~
 [net]
+~~~
 git-fetch-with-cli = true
+~~~
 依次 exit、:wq! 保存退出。
 
 然后注意需要有libclang，
+~~~
 sudo apt-get install libclang-dev
-
+~~~
 
 使用：
+~~~
 export OMP_NUM_THREADS=1
 # -t: trace type, oracleGeneral is the only supported type
 # -i: trace path
@@ -212,11 +231,15 @@ export OMP_NUM_THREADS=1
 # -m: cache type, l2cache or segcache
 # -r: how often report stats
 # -n: hashpower (the estimated number of objects in the cache is 2^n)
+~~~
 举例使用：
+~~~
 ./target/release/bench -t oracleGeneral -i ../micro-implementation/data/trace.oracleGeneral.bin -c 1000 -m l2cache -r 86400 -n 24
-
+~~~
 
 
 
 输出提供了关于缓存模拟的信息，包括缓存大小、追踪文件、请求数量、模拟时间、吞吐量、缺失率等相关指标。：
+~~~
 l2cache 1000, trace.oracleGeneral.bin, 113871 req, trace 2.00 hour, 0.21 sec, throughput 0.83 MQPS, miss ratio 0.5715, interval miss ratio 0.5715
+~~~
