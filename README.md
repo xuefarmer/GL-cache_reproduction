@@ -21,6 +21,7 @@ libCacheSim 功能
 
 支持的算法
 cachesim支持以下算法：
+~~~
 FIFO, LRU, Clock, SLRU
 LFU, LFU with dynamic aging
 ARC, TwoQ
@@ -36,59 +37,69 @@ TinyLFU
 QD-LP
 S3-FIFO
 Sieve
-
+~~~
 构建 libCacheSim
 cmake 建议使用out-of-source build，因此我们在一个新目录中进行：
+~~~
 git clone https://github.com/1a1a11a/libCacheSim
 pushd libCachesim;
 mkdir _build && cd _build;
 cmake .. && make -j;
 [sudo] make install;
 popd;
-
+~~~
 cachesim（高性能缓存模拟器）
 构建并安装 libCacheSim 后，cachesim应该位于该_build/bin/目录中。
 
 基本用法
+~~~
 ./bin/cachesim trace_path trace_type eviction_algo cache_size [OPTION...]
+~~~
 用于./bin/cachesim --help获取更多信息。
 
 运行单个缓存模拟
 使用 LRU 逐出算法和 1GB 缓存大小运行示例跟踪。
-
+~~~
 # 注意缓存大小和单位之间不能有空格，单位不区分大小写
-./bin/cachesim ../data/trace.vscsi vscsi lru 1gb 
+./bin/cachesim ../data/trace.vscsi vscsi lru 1gb
+~~~
 使用不同的缓存大小运行多个缓存模拟
+
+~~~
 # 注意缓存大小之间不能有空格
 ./bin/cachesim ../data/trace.vscsi vscsi lru 1mb,16mb,256mb,8gb
-
+~~~
+~~~
 # 除了绝对缓存大小之外，您还可以使用工作集大小的一部分
 ./bin/cachesim ../data/trace.vscsi vscsi lru 0.001,0.01,0.1,0.2
-
+~~~
+~~~
 # 除了以字节为单位,你也可以把他们都视为统一单位，大小是数字 
 ./bin/cachesim ../data/trace.vscsi vscsi lru 1000,16000 --ignore-obj-size 1
-
+~~~
+~~~
 # 使用csv跟踪，当有多个选项时注意引号
 ./bin/cachesim ../data/trace.csv csv lru 1gb -t "time-col=2, obj-id-col=5, obj-size-col=4"
-
+~~~
+~~~
 # 使用csv跟踪，有多个选项
 ./bin/cachesim ../data/trace.csv csv lru 1gb -t "time-col=2, obj-id-col=5, obj-size-col=4, delimiter=,, has-header=true"
-
+~~~
 
 
 绘制遗漏率曲线
 您可以绘制不同算法和大小的未命中率，并绘制随时间变化的未命中率。
-
+~~~
 # 绘制缺失率与尺寸之比
 cd scripts;
 python3 plot_mrc_size.py --tracepath ../data/twitter_cluster52.csv --trace-format csv --trace-format-params="time-col=1,obj-id-col=2,obj-size-col=3,delimiter=," --algos=fifo,lru,lecar,s3fifo --sizes=0.001,0.002,0.005,0.01,0.02,0.05,0.1,0.2,0.3,0.4
+~~~
 
 
-
-
+~~~
 # 绘制缺失率与时间之比
 python3 plot_mrc_time.py --tracepath ../data/twitter_cluster52.csv --trace-format csv --trace-format-params="time-col=1, obj-id-col=2, obj-size-col=3, delimiter=,," --algos=fifo,lru,lecar,s3fifo --report-interval=30 --miss-ratio-type="accu"
-
+~~~
 
 使用 libCacheSim 作为库
 libCacheSim 可以用作构建缓存模拟器的库。例如，您可以构建具有一致性哈希的缓存集群，或者多层缓存模拟器。
