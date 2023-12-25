@@ -94,7 +94,7 @@ python3 plot_mrc_time.py --tracepath ../data/twitter_cluster52.csv --trace-forma
 libCacheSim 可以用作构建缓存模拟器的库。例如，您可以构建具有一致性哈希的缓存集群，或者多层缓存模拟器。
 
 这是一个显示基本 API 的简化示例。
-...
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <libCacheSim.h>
@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-...
+
 将其保存到test.c并编译
 
 
