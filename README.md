@@ -73,7 +73,7 @@ cachesim（高性能缓存模拟器）
 
 # 使用csv跟踪，有多个选项
 ./bin/cachesim ../data/trace.csv csv lru 1gb -t "time-col=2, obj-id-col=5, obj-size-col=4, delimiter=,, has-header=true"
-![Alt text](image.png)
+
 
 
 绘制遗漏率曲线
@@ -164,7 +164,7 @@ gcc test.c $(pkg-config --cflags --libs libCacheSim glib-2.0) -ldl -o test.out
 
 然后运行 ./test.out
 
-![Alt text](image-1.png)
+
 
 
 
@@ -204,7 +204,7 @@ export OMP_NUM_THREADS=1
 举例使用：
 ./target/release/bench -t oracleGeneral -i ../micro-implementation/data/trace.oracleGeneral.bin -c 1000 -m l2cache -r 86400 -n 24
 
-![Alt text](image-2.png)
+
 
 
 输出提供了关于缓存模拟的信息，包括缓存大小、追踪文件、请求数量、模拟时间、吞吐量、缺失率等相关指标。：
