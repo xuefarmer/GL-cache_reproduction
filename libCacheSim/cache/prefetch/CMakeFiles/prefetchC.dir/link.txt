@@ -1,0 +1,2 @@
+/usr/bin/ar qc libprefetchC.a CMakeFiles/prefetchC.dir/Mithril.c.o
+/usr/bin/ranlib libprefetchC.a
