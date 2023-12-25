@@ -1,242 +1,211 @@
-# libCacheSim - building and running cache simulations
+微实现部分：
+主要是libCacheSim
 
-[![build](https://github.com/1a1a11a/libCacheSim/actions/workflows/build.yml/badge.svg)](https://github.com/1a1a11a/libCacheSim/actions/workflows/build.yml)
-
-**The stable development of libCacheSim has moved to [https://github.com/cacheMon/libCacheSim](https://github.com/cacheMon/libCacheSim)**. 
-
-
-## News
-* **2023 June**: **QD-LP** is available now, see [our paper](https://dl.acm.org/doi/10.1145/3593856.3595887) for details.
-* **2023 Oct**: **S3-FIFO** and **Sieve** are generally available! These are simple algorithms that are very effective in reducing cache misses. Try them out in libCacheSim and your production!
----
-
-## What is libCacheSim
-* a high-performance **cache simulator** for running cache simulations. 
-* a high-performance and versatile trace analyzer for **analyzing different cache traces**.
-* a high-performance **library** for building cache simulators. 
-
----
-
-## libCacheSim features 
-* **High performance** - over 20M requests/sec for a realistic trace replay. 
-* **High memory efficiency** - predictable and small memory footprint. 
-* **State-of-the-art algorithms** - eviction algorithms, admission algorithms, sampling techniques, approximate miss ratio computation, see [here](/doc/quickstart_cachesim.md). 
-* Parallelism out-of-the-box - uses the many CPU cores to speed up trace analysis and cache simulations. 
-* **The ONLY feature-rich trace analyzer** - all types of trace analysis you need, see [here](/doc/quickstart_traceAnalyzer.md).
-* **Simple API** - easy to build cache clusters, multi-layer caching, etc, see [here](/doc/API.md).
-* **Extensible** - easy to support new trace types or eviction algorithms, see [here](/doc/advanced_lib_extend.md).
----
-
-## Supported algorithms
-cachesim supports the following algorithms:
-* [FIFO](/libCacheSim/cache/eviction/FIFO.c), [LRU](/libCacheSim/cache/eviction/LRU.c), [Clock](/libCacheSim/cache/eviction/Clock.c), [SLRU](/libCacheSim/cache/eviction/SLRU.c)
-* [LFU](/libCacheSim/cache/eviction/LFU.c), [LFU with dynamic aging](/libCacheSim/cache/eviction/LFUDA.c)
-* [ARC](/libCacheSim/cache/eviction/ARC.c), [TwoQ](/libCacheSim/cache/eviction/TwoQ.c)
-* [Belady](/libCacheSim/cache/eviction/Belady.c), [BeladySize](/libCacheSim/cache/eviction/BeladySize.c)
-* [GDSF](/libCacheSim/cache/eviction/cpp/GDSF.cpp)
-* [Hyperbolic](/libCacheSim/cache/eviction/Hyperbolic.c)
-* [LeCaR](/libCacheSim/cache/eviction/LeCaR.c)
-* [Cacheus](/libCacheSim/cache/eviction/Cacheus.c)
-* [LHD](/libCacheSim/cache/eviction/LHD/LHD_Interface.cpp)
-* [LRB](/libCacheSim/cache/eviction/LRB/LRB_Interface.cpp)
-* [GLCache](/libCacheSim/cache/eviction/GLCache/GLCache.c)
-* [TinyLFU](/libCacheSim/cache/eviction/TinyLFU.c)
-* [QD-LP](/libCacheSim/cache/eviction/QDLP.c)
-* [S3-FIFO](/libCacheSim/cache/eviction/S3FIFO.c)
-* [Sieve](/libCacheSim/cache/eviction/Sieve.c)
----
+libCacheSim - 构建和运行缓存模拟
 
 
-## Build and Install libCacheSim
-### One-line install
-We provide some scripts for quick installation of libCacheSim. 
-```bash
-cd scripts && bash install_dependency.sh && bash install_libcachesim.sh;
-```
-If this does not work, please 
-1. let us know what system you are using and what error you get
-2. read the following sections for self-installation.
+什么是 libCacheSim
+用于运行缓存模拟的高性能缓存模拟器。
+高性能、多功能的跟踪分析器，用于分析不同的缓存跟踪。
+用于构建缓存模拟器的高性能库。
 
-### Install dependency
-libCacheSim uses [cmake](https://cmake.org/) build system and has a few dependencies: [glib](https://developer.gnome.org/glib/), [tcmalloc](https://github.com/google/tcmalloc), [zstd](https://github.com/facebook/zstd).
-Please see [install.md](/doc/install.md) for how to install the dependencies. 
+libCacheSim 功能
+高性能- 超过 20M 请求/秒，实现真实的跟踪重放。
+高内存效率- 可预测且内存占用小。
+最先进的算法- 驱逐算法、准入算法、采样技术、近似丢失率计算。
+开箱即用的并行性 - 使用多个 CPU 内核来加速跟踪分析和缓存模拟。
+唯一功能丰富的跟踪分析仪- 您需要的所有类型的跟踪分析。
+简单的API - 轻松构建缓存集群、多层缓存等，参见这里。
+可扩展- 易于支持新的跟踪类型或逐出算法。
 
 
-### Build libCacheSim
-cmake recommends **out-of-source build**, so we do it in a new directory:
-```
+支持的算法
+cachesim支持以下算法：
+FIFO, LRU, Clock, SLRU
+LFU, LFU with dynamic aging
+ARC, TwoQ
+Belady, BeladySize
+GDSF
+Hyperbolic
+LeCaR
+Cacheus
+LHD
+LRB
+GLCache
+TinyLFU
+QD-LP
+S3-FIFO
+Sieve
+
+构建 libCacheSim
+cmake 建议使用out-of-source build，因此我们在一个新目录中进行：
 git clone https://github.com/1a1a11a/libCacheSim
 pushd libCachesim;
 mkdir _build && cd _build;
 cmake .. && make -j;
 [sudo] make install;
 popd;
-```
----
 
-## Usage
-### cachesim (a high-performance cache simulator)
-After building and installing libCacheSim, `cachesim` should be in the `_build/bin/` directory. 
-#### basic usage
-```
+cachesim（高性能缓存模拟器）
+构建并安装 libCacheSim 后，cachesim应该位于该_build/bin/目录中。
+
+基本用法
 ./bin/cachesim trace_path trace_type eviction_algo cache_size [OPTION...]
-```
+用于./bin/cachesim --help获取更多信息。
 
-use `./bin/cachesim --help` to get more information.
+运行单个缓存模拟
+使用 LRU 逐出算法和 1GB 缓存大小运行示例跟踪。
 
-#### Run a single cache simulation
-Run the example traces with LRU eviction algorithm and 1GB cache size. 
-
-```bash
-# Note that no space between the cache size and the unit, unit is not case sensitive
+# 注意缓存大小和单位之间不能有空格，单位不区分大小写
 ./bin/cachesim ../data/trace.vscsi vscsi lru 1gb 
-```
-
-#### Run multiple cache simulations with different cache sizes
-```bash
-# Note that no space between the cache sizes
+使用不同的缓存大小运行多个缓存模拟
+# 注意缓存大小之间不能有空格
 ./bin/cachesim ../data/trace.vscsi vscsi lru 1mb,16mb,256mb,8gb
 
-# besides absolute cache size, you can also use fraction of working set size
+# 除了绝对缓存大小之外，您还可以使用工作集大小的一部分
 ./bin/cachesim ../data/trace.vscsi vscsi lru 0.001,0.01,0.1,0.2
 
-# besides using byte as the unit, you can also treat all objects having the same size, and the size is the number of objects
+# 除了以字节为单位,你也可以把他们都视为统一单位，大小是数字 
 ./bin/cachesim ../data/trace.vscsi vscsi lru 1000,16000 --ignore-obj-size 1
 
-# use a csv trace, note the qutation marks when you have multiple options
+# 使用csv跟踪，当有多个选项时注意引号
 ./bin/cachesim ../data/trace.csv csv lru 1gb -t "time-col=2, obj-id-col=5, obj-size-col=4"
 
-# use a csv trace with more options
+# 使用csv跟踪，有多个选项
 ./bin/cachesim ../data/trace.csv csv lru 1gb -t "time-col=2, obj-id-col=5, obj-size-col=4, delimiter=,, has-header=true"
-``` 
-
-See [quick start cachesim](/doc/quickstart_cachesim.md) for more usages. 
+![Alt text](image.png)
 
 
-#### Plot miss ratio curve
-You can plot miss ratios of different algorithms and sizes, and plot the miss ratios over time.
+绘制遗漏率曲线
+您可以绘制不同算法和大小的未命中率，并绘制随时间变化的未命中率。
 
-```bash
-# plot miss ratio over size
+# 绘制缺失率与尺寸之比
 cd scripts;
 python3 plot_mrc_size.py --tracepath ../data/twitter_cluster52.csv --trace-format csv --trace-format-params="time-col=1,obj-id-col=2,obj-size-col=3,delimiter=," --algos=fifo,lru,lecar,s3fifo --sizes=0.001,0.002,0.005,0.01,0.02,0.05,0.1,0.2,0.3,0.4
 
-# plot miss ratio over time
+
+
+
+# 绘制缺失率与时间之比
 python3 plot_mrc_time.py --tracepath ../data/twitter_cluster52.csv --trace-format csv --trace-format-params="time-col=1, obj-id-col=2, obj-size-col=3, delimiter=,," --algos=fifo,lru,lecar,s3fifo --report-interval=30 --miss-ratio-type="accu"
-```
-
----
-
-### Trace analysis
-libCacheSim also has a trace analyzer that provides a lot of useful information about the trace. 
-And it is very fast, designed to work with billions of requests. 
-It also coms with a set of scripts to help you analyze the trace. 
-See [trace analysis](/doc/quickstart_traceAnalyzer.md) for more details.
 
 
+使用 libCacheSim 作为库
+libCacheSim 可以用作构建缓存模拟器的库。例如，您可以构建具有一致性哈希的缓存集群，或者多层缓存模拟器。
 
+这是一个显示基本 API 的简化示例。
 
----
-
-### Using libCacheSim as a library 
-libCacheSim can be used as a library for building cache simulators. 
-For example, you can build a cache cluster with consistent hashing, or a multi-layer cache simulator.
-
-Here is a simplified example showing the basic APIs. 
-```c 
+#include <stdio.h>
+#include <stdlib.h>
 #include <libCacheSim.h>
 
-/* open trace, see quickstart_lib.md for opening csv and binary trace */
-reader_t *reader = open_trace("../data/trace.vscsi", VSCSI_TRACE, NULL);
+int main(int argc, char *argv[]) {
+    /* open trace, see quickstart.md for opening csv and binary trace */
+    reader_t *reader = open_trace("./data/trace.vscsi", VSCSI_TRACE, NULL);
 
-/* craete a container for reading from trace */
-request_t *req = new_request();
+    /* create a container for reading from trace */
+    request_t *req = new_request();
 
-/* create a LRU cache */
-common_cache_params_t cc_params = {.cache_size=1024*1024U}; 
-cache_t *cache = LRU_init(cc_params, NULL); 
+    /* create caches with different algorithms and parameters */
+    common_cache_params_t lru_params = default_common_cache_params();
+    lru_params.cache_size = 1024 * 1024U;
+    cache_t *lru_cache = LRU_init(lru_params, NULL);
 
-/* counters */
-uint64_t n_req = 0, n_miss = 0;
+    common_cache_params_t arc_params = default_common_cache_params();
+    arc_params.cache_size = 1024 * 1024U;
+    cache_t *arc_cache = ARC_init(arc_params, NULL);
 
-/* loop through the trace */
-while (read_one_req(reader, req) == 0) {
-    if (!cache->get(cache, req)) {
-        n_miss++;
+    common_cache_params_t slru_params = default_common_cache_params();
+    slru_params.cache_size = 1024 * 1024U;
+    cache_t *slru_cache = SLRU_init(slru_params, NULL);
+
+    /* counters */
+    uint64_t lru_miss_byte = 0, arc_miss_byte = 0, slru_miss_byte = 0;
+
+    /* loop through the trace */
+    while (read_one_req(reader, req) == 0) {
+        /* simulate cache access for different algorithms */
+        if (lru_cache->get(lru_cache, req) == false) {
+            lru_miss_byte += req->obj_size;
+        }
+
+        if (arc_cache->get(arc_cache, req) == false) {
+            arc_miss_byte += req->obj_size;
+        }
+
+        if (slru_cache->get(slru_cache, req) == false) {
+            slru_miss_byte += req->obj_size;
+        }
     }
-    n_req++;
+
+    /* print results */
+    printf("LRU Missed Bytes: %lu\n", lru_miss_byte);
+    printf("ARC Missed Bytes: %lu\n", arc_miss_byte);
+    printf("SLRU Missed Bytes: %lu\n", slru_miss_byte);
+
+    /* cleaning */
+    close_trace(reader);
+    free_request(req);
+    lru_cache->cache_free(lru_cache);
+    arc_cache->cache_free(arc_cache);
+    slru_cache->cache_free(slru_cache);
+
+    return 0;
 }
 
-printf("miss ratio: %.4lf\n", (double)n_miss / n_req);
+将其保存到test.c并编译
 
-/* cleaning */
-close_trace(reader);
-free_request(req);
-cache->cache_free(cache);
-```
 
-save this to `test.c` and compile with 
-``` bash
+注意使用如下命令：
 gcc test.c $(pkg-config --cflags --libs libCacheSim glib-2.0) -o test.out
-```
 
-See [here](/doc/advanced_lib.md) for more details, and see [example folder](/example) for examples on how to use libCacheSim, such as building a cache cluster with consistent hashing, multi-layer cache simulators. 
+若出现undefined reference错误，解决这个问题的方法是在编译时明确地链接 libdl 库，则使用如下命令：
+gcc test.c $(pkg-config --cflags --libs libCacheSim glib-2.0) -ldl -o test.out
 
----
+然后运行 ./test.out
 
-
-### Extending libCacheSim (new algorithms and trace types)
-libCacheSim supports *txt*, *csv*, and *binary* traces. We prefer binary traces because it allows libCacheSim to run faster, and the traces are more compact. 
-
-We also support zstd compressed binary traces without decompression. This allows you to store the traces with less space.
-
-If you need to add a new trace type or a new algorithm, please see [here](/doc/advanced_lib_extend.md) for details. 
+![Alt text](image-1.png)
 
 
----
-### Questions? 
-Please join the Google group https://groups.google.com/g/libcachesim and ask questions.
+
+原型部分：
+构建：
+进入prototype目录
+
+直接使用以下命令会报错
+cargo build --release
+需要换源：
+使用 vim 新建（或编辑已有）一个config文件：
+sudo vim ~/.cargo/config
+
+这时 vim 建立一个新的为保存config文件，英文输入模式下，输入 i 进入编辑模式，添加以下内容（和在Windows 时编辑的配置文件一样）：
+[source.crates-io]
+replace-with='rsproxy'
+[source.rsproxy]
+registry="https://rsproxy.cn/crates.io-index"
+[registries.rsproxy]
+index = "https://rsproxy.cn/crates.io-index"
+[net]
+git-fetch-with-cli = true
+依次 exit、:wq! 保存退出。
+
+然后注意需要有libclang，
+sudo apt-get install libclang-dev
 
 
----  
-### Contributions 
-We gladly welcome pull requests.
-Before making any changes, we recommend opening an issue and discussing your proposed changes.  
-This will let us give you advice on the proposed changes. If the changes are minor, then feel free to make them without discussion. 
-This project adheres to Google's coding style. By participating, you are expected to uphold this code. 
+使用：
+export OMP_NUM_THREADS=1
+# -t: trace type, oracleGeneral is the only supported type
+# -i: trace path
+# -c: cache size in MB
+# -m: cache type, l2cache or segcache
+# -r: how often report stats
+# -n: hashpower (the estimated number of objects in the cache is 2^n)
+举例使用：
+./target/release/bench -t oracleGeneral -i ../micro-implementation/data/trace.oracleGeneral.bin -c 1000 -m l2cache -r 86400 -n 24
 
----
-### Reference
-```
-@inproceedings{yang20-workload,
-    author = {Juncheng Yang and Yao Yue and K. V. Rashmi},
-    title = {A large scale analysis of hundreds of in-memory cache clusters at Twitter},
-    booktitle = {14th USENIX Symposium on Operating Systems Design and Implementation (OSDI 20)},
-    year = {2020},
-    isbn = {978-1-939133-19-9},
-    pages = {191--208},
-    url = {https://www.usenix.org/conference/osdi20/presentation/yang},
-    publisher = {USENIX Association},
-    month = nov,
-}
-
-@inproceedings{yang2023-s3fifo,
-  title={FIFO queues are all you need for cache eviction},
-  author={Yang, Juncheng and Zhang, Yazhuo and Qiu, Ziyue and Yue, Yao and Rashmi, K.V.},
-  booktitle={Symposium on Operating Systems Principles (SOSP'23)},
-  year={2023}
-}
-```
-If you used libCacheSim in your research, please cite the above papers. And we welcome you to send us a link to your paper and add reference to (references.md)[references.md].
-
----
+![Alt text](image-2.png)
 
 
-### License
-See [LICENSE](LICENSE) for details.
-
-### Related
-* [PyMimircache](https://github.com/1a1a11a/PyMimircache): a python based cache trace analysis platform, now deprecated
----
-
-
+输出提供了关于缓存模拟的信息，包括缓存大小、追踪文件、请求数量、模拟时间、吞吐量、缺失率等相关指标。：
+l2cache 1000, trace.oracleGeneral.bin, 113871 req, trace 2.00 hour, 0.21 sec, throughput 0.83 MQPS, miss ratio 0.5715, interval miss ratio 0.5715
